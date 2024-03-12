@@ -5,6 +5,9 @@ class CreateOrders < ActiveRecord::Migration[7.1]
       t.references :disbursement, foreign_key: true, type: :uuid
 
       t.decimal :amount, precision: 16, scale: 2, null: false
+      t.decimal :fees, precision: 16, scale: 2
+
+
 
       t.timestamps default: -> { 'CURRENT_TIMESTAMP' }
     end
