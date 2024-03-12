@@ -5,7 +5,6 @@ module Merchants
     private
 
     BATCH_SIZE = 5000
-
     private_constant :BATCH_SIZE
 
     def initialize(file_path)
@@ -16,7 +15,6 @@ module Merchants
       CSV
         .foreach(@file_path, col_sep: ';', headers: true)
         .lazy.each_slice(BATCH_SIZE) do |batch|
-          byebug
           insertable_batch = batch.map(&:to_h)
           Merchant.insert_all(insertable_batch)
         end

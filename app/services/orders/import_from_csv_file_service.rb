@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 module Orders
-  class ImportFromFileService < ApplicationService
+  class ImportFromCsvFileService < ApplicationService
     private
+
+    BATCH_SIZE = 5000
+    private_constant :BATCH_SIZE
 
     def initialize(file_path)
       @file_path = file_path
@@ -12,7 +15,7 @@ module Orders
       CSV
       .foreach(@file_path, col_sep: ';', headers: true)
       .lazy.each_slice(BATCH_SIZE) do |batch|
-        import(batch)
+        import_batch(batch)
       end
     end
 
@@ -27,6 +30,7 @@ module Orders
         item_h[:merchant_id] = merchant_reference_by_ids[item['merchant_reference']]
 
         item_h.delete('merchant_reference')
+        item_h.delete('id')
 
         item_h
       end
