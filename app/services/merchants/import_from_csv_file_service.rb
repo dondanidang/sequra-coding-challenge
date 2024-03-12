@@ -8,14 +8,15 @@ module Merchants
 
     private_constant :BATCH_SIZE
 
-    def initialize(file)
-      @file = file
+    def initialize(file_path)
+      @file_path = file_path
     end
 
     def call
       CSV
-        .foreach(file, col_sep: ';', headers: true)
+        .foreach(@file_path, col_sep: ';', headers: true)
         .lazy.each_slice(BATCH_SIZE) do |batch|
+          byebug
           insertable_batch = batch.map(&:to_h)
           Merchant.insert_all(insertable_batch)
         end
