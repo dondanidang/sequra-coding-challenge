@@ -2,10 +2,10 @@
 
 # Merchant model
 class Merchant < ApplicationRecord
-  has_many :orders
-  has_many :disbursements
+  has_many :orders, inverse_of: :merchant
+  has_many :disbursements, inverse_of: :merchant
 
   validates :reference, uniqueness: true
-  validates :name, presence: true
   validates :email, uniqueness: true
+  validates :reference, :email, :disbursement_frequency, :minimum_monthly_fee, presence: true
 end

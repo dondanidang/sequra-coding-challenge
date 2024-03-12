@@ -8,6 +8,8 @@ class CreateDisbursements < ActiveRecord::Migration[7.1]
       t.decimal :merchant_paid_amount, precision: 16, scale: 2, null: false
       t.decimal :total_fees, precision: 16, scale: 2, null: false
 
+      t.index :reference, unique: true
+
       t.timestamps default: -> { 'CURRENT_TIMESTAMP' }
     end
   end

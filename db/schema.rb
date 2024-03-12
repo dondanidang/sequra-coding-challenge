@@ -24,14 +24,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_232157) do
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["merchant_id"], name: "index_disbursements_on_merchant_id"
+    t.index ["reference"], name: "index_disbursements_on_reference", unique: true
   end
 
   create_table "merchants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "reference"
-    t.string "email"
+    t.string "reference", null: false
+    t.string "email", null: false
     t.date "live_on"
-    t.string "disbursement_frequency"
-    t.decimal "minimum_monthly_fee"
+    t.string "disbursement_frequency", null: false
+    t.decimal "minimum_monthly_fee", precision: 16, scale: 2, null: false
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["email"], name: "index_merchants_on_email", unique: true
@@ -41,7 +42,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_232157) do
   create_table "orders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "merchant_id", null: false
     t.uuid "disbursement_id"
-    t.decimal "amount", precision: 16, scale: 2
+    t.decimal "amount", precision: 16, scale: 2, null: false
     t.decimal "fees", precision: 16, scale: 2
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
