@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_11_232157) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_13_003303) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -46,8 +46,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_232157) do
     t.decimal "fees", precision: 16, scale: 2
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.string "reference_id", null: false
     t.index ["disbursement_id"], name: "index_orders_on_disbursement_id"
     t.index ["merchant_id"], name: "index_orders_on_merchant_id"
+    t.index ["reference_id"], name: "index_orders_on_reference_id", unique: true
   end
 
   add_foreign_key "disbursements", "merchants"
