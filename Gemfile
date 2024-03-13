@@ -39,6 +39,8 @@ gem "bootsnap", require: false
 # gem "rack-cors"
 
 group :development, :test do
+  gem 'rspec-rails', '~> 6.1.0'
+
   gem 'dotenv'
 
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -46,6 +48,12 @@ group :development, :test do
 
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ]
+
+  # A library for generating fake data such as names, addresses, and phone
+  gem 'faker'
+
+  # A library for setting up Ruby objects as test data.
+  gem 'factory_bot_rails'
 end
 
 group :development do
