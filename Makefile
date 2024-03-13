@@ -6,3 +6,5 @@ db-up:
 	@echo "$(CYAN_COLOR)==> Starting database server...$(NO_COLOR)"
 	docker-compose run --service-ports db
 
+rspec:
+	RAILS_ENV=test rails db:test:prepare  && rspec $(ARGS)
