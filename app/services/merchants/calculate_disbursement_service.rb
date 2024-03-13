@@ -40,9 +40,7 @@ class CalculateDisbursementService < ApplicationService
   end
 
   def orders
-    @orders ||= merchant
-      .orders
-      .where(created_at: activity_day.all_day)
+    @orders ||= merchant.orders.where(created_at: activity_day.all_day)
   end
 
   def activity_day

@@ -17,6 +17,8 @@ class CalculateOrderFeesService < ApplicationService
 
         item.attributes
       end
+
+      Order.upsert_all(upsertable_batch, update_only: %i[fees])
     end
   end
 
