@@ -1,61 +1,90 @@
 # frozen_string_literal: true
 
-class CalculateDisbursementService < ApplicationService
-  private
+module Merchants
+  class CalculateDisbursementService < ApplicationService
+    private
 
-  def initialize(merchant, disbursement_date: nil)
-    @merchant = merchant
-    @disbursement_date ||= DateTime.current
-  end
+    DAYS_NUMBER_BY_FREQUENCY = {
+      'WEEKLY' => 7,
+     'DAILY' => 1
+    }
 
-  def call
-    calculate_orders_fees
+    private_constant DAYS_NUMBER_BY_FREQUENCY
 
-    ActiveRecord::Base.transaction do
-      @disbursement = create_disbursement
-
-      update_orders
+    def initialize(merchant, disbursement_date: nil)
+      @merchant = merchant
+      @disbursement_date ||= DateTime.current
     end
-  end
 
-  def create_disbursement
-    Disbursement.create!(
-      merchant: @merchant,
-      orders_amount:,
-      merchant_paid_amount:,
-      total_fees:
-    )
-  end
+    def call
+      return unless can_disbursement_be_done?
 
-  def update_orders
-    orders.update_all(disbursement_id: @disbursement)
-  end
+      calculate_orders_fees
 
-  def calculate_orders_fees
-    CalculateOrderFeesService.call(
-      @merchant,
-      start_date: activity_day.beginning_of_day,
-      end_date: activity_day.end_date
-    )
-  end
+      ActiveRecord::Base.transaction do
+        @disbursement = create_disbursement
 
-  def orders
-    @orders ||= merchant.orders.where(created_at: activity_day.all_day)
-  end
+        update_orders
+      end
+    end
 
-  def activity_day
-    @activity_day ||= @disbursement_date - 1
-  end
+    def can_disbursement_be_done?
+      return if @disbursement_date <= live_on
 
-  def orders_amount
-    @orders_amount ||= orders.sum(:amount)
-  end
+      true
+    end
 
-  def total_fees
-    @fees ||= orders.sum(:fees)
-  end
+    def last_disbursement
+      return @last_disbursement if defined?(@last_disbursement)
 
-  def merchant_paid_amount
-    orders_amount - fees
+      last_disbursement = @mercant.disbursements.order(created_at: :desc).first
+    end
+
+    def create_disbursement
+      Disbursement.create!(
+        merchant: @merchant,
+        orders_amount:,
+        merchant_paid_amount:,
+        total_fees:
+      )
+    end
+
+    def update_orders
+      orders.update_all(disbursement_id: @disbursement)
+    end
+
+    def calculate_orders_fees
+      CalculateOrderFeesService.call(
+        @merchant,
+        start_date: activity_day.beginning_of_day,
+        end_date: activity_day.end_date
+      )
+    end
+
+    def orders
+      @orders ||= merchant.orders.where(created_at: activity_day.all_day)
+    end
+
+    def activity_days_start
+      @activity_days_start ||= (
+        @disbursement_date - DAYS_NUMBER_BY_FREQUENCY[@mercant.disbursement_frequency]
+      ).beginning_of_day
+    end
+
+    def activity_days_end
+      @activity_days_end ||= (@disbursement_date - 1).end_of_day
+    end
+
+    def orders_amount
+      @orders_amount ||= orders.sum(:amount)
+    end
+
+    def total_fees
+      @fees ||= orders.sum(:fees)
+    end
+
+    def merchant_paid_amount
+      orders_amount - fees
+    end
   end
 end
