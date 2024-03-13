@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Merchants
-  class CalculateDisbursementService < ApplicationService
+  class GenerateDisbursementsService < ApplicationService
     private
 
     DAYS_NUMBER_BY_FREQUENCY = {
