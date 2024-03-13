@@ -46,7 +46,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_003303) do
     t.decimal "fees", precision: 16, scale: 2
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.string "external_reference_id", null: false
+    t.string "external_reference_id"
     t.index ["disbursement_id"], name: "index_orders_on_disbursement_id"
     t.index ["external_reference_id"], name: "index_orders_on_external_reference_id", unique: true
     t.index ["merchant_id"], name: "index_orders_on_merchant_id"
