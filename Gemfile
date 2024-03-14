@@ -40,6 +40,7 @@ gem "bootsnap", require: false
 
 group :development, :test do
   gem 'rspec-rails', '~> 6.1.0'
+  gem 'shoulda-matchers', '~> 6.0'
 
   gem 'dotenv'
 

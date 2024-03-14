@@ -28,6 +28,7 @@ module Orders
         item_h = item.to_h
 
         item_h[:merchant_id] = merchant_reference_by_ids[item['merchant_reference']]
+        item_h[:external_reference_id] = item['id']
 
         item_h.delete('merchant_reference')
         item_h.delete('id')
