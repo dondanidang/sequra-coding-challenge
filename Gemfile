@@ -40,6 +40,7 @@ gem "bootsnap", require: false
 
 gem "sidekiq", "~> 7.2"
 gem 'oj'
+gem 'money'
 
 group :development, :test do
   gem 'rspec-rails', '~> 6.1.0'
