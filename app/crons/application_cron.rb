@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ApplicationService
+class ApplicationCron
   def self.run(*args, **kwargs)
     new(*args, **kwargs).send(:run)
   end
