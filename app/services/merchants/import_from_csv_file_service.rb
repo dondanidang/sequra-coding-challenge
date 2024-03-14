@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Merchants
-  class ImportFromCsvFileService < ApplicationService
+  class ImportFromCsvFileService < ApplicationService # :nodoc:
     private
 
     BATCH_SIZE = 5000

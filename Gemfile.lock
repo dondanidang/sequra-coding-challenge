@@ -138,6 +138,8 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.2-x86_64-linux)
       racc (~> 1.4)
+    oj (3.16.3)
+      bigdecimal (>= 3.0)
     pg (1.5.6)
     psych (5.1.2)
       stringio
@@ -184,6 +186,8 @@ GEM
     rake (13.1.0)
     rdoc (6.6.2)
       psych (>= 4.0.0)
+    redis-client (0.21.0)
+      connection_pool
     reline (0.4.3)
       io-console (~> 0.5)
     rspec-core (3.13.0)
@@ -205,6 +209,11 @@ GEM
     rspec-support (3.13.0)
     shoulda-matchers (6.1.0)
       activesupport (>= 5.2.0)
+    sidekiq (7.2.2)
+      concurrent-ruby (< 2)
+      connection_pool (>= 2.3.0)
+      rack (>= 2.2.4)
+      redis-client (>= 0.19.0)
     spring (4.1.3)
     stringio (3.1.0)
     thor (1.3.1)
@@ -230,11 +239,13 @@ DEPENDENCIES
   factory_bot_rails
   faker
   jbuilder
+  oj
   pg
   puma (>= 5.0)
   rails (~> 7.1.3, >= 7.1.3.2)
   rspec-rails (~> 6.1.0)
   shoulda-matchers (~> 6.0)
+  sidekiq (~> 7.2)
   spring
   tzinfo-data
 
