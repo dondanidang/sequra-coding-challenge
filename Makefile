@@ -13,5 +13,5 @@ redis:
 rspec:
 	RAILS_ENV=test rails db:test:prepare  && rspec $(ARGS)
 
-sidekiq: redis
+procs:
 	bundle exec sidekiq
