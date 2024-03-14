@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Crons
-  class GenerateMerchantsDisbursementsCron < ApplicationCron
+module Merchants
+  class GenerateDisbursementsCron < ApplicationCron
     private
 
     def run
