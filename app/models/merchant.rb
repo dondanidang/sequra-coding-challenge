@@ -5,7 +5,10 @@ class Merchant < ApplicationRecord
   DISBURSEMENT_FREQUENCIES = {
     daily: 'DAILY',
     weekly: 'WEEKLY'
-}.freeze
+  }.freeze
+
+  include Moneyable
+  with_money_on  :minimum_monthly_fee
 
   has_many :orders, inverse_of: :merchant
   has_many :disbursements, inverse_of: :merchant

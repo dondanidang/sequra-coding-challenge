@@ -122,6 +122,8 @@ GEM
     marcel (1.0.4)
     mini_mime (1.1.5)
     minitest (5.22.2)
+    money (6.19.0)
+      i18n (>= 0.6.4, <= 2)
     msgpack (1.7.2)
     mutex_m (0.2.0)
     net-imap (0.4.10)
@@ -239,6 +241,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   jbuilder
+  money
   oj
   pg
   puma (>= 5.0)
