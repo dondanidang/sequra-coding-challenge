@@ -75,9 +75,14 @@ RSpec.describe Merchants::GenerateDisbursementsService do
           :order,
           merchant: merchant,
           amount: 10,
-          created_at: 2.days.ago.to_date
+          created_at: 2.days.ago.to_date,
+          disbursement: disbursement,
+          fees: fees
         )
       end
+
+      let(:disbursement) { nil }
+      let(:fees) { nil }
 
       it 'generates disbursement and update order' do
         expect { generate }
@@ -108,6 +113,42 @@ RSpec.describe Merchants::GenerateDisbursementsService do
           )
 
           expect(order_2.reload.disbursement_id).to eq(first_disbursement.id)
+        end
+      end
+
+      context 'when there is existing disbursement' do
+        let(:fees) { 0.1 }
+        let(:disbursement) do
+          create(
+            :disbursement,
+            merchant: merchant,
+            orders_amount: 10,
+            total_fees: 0.1,
+            merchant_paid_amount: 9.9,
+            created_at: 1.day.ago.to_date
+          )
+        end
+
+        it 'only creates 1 disbursement' do
+          expect { generate }
+          .to change { Disbursement.count }.by(1)
+          .and change { order.reload.fees }.to(0.95)
+          .and change { order.reload.disbursement_id }
+          .and not_change { order_2.reload.fees }
+          .and not_change { order_2.reload.disbursement_id }
+
+          new_disbursement = Disbursement.order(created_at: :asc).last
+
+          aggregate_failures do
+            expect(new_disbursement).to have_attributes(
+              merchant_id: merchant.id,
+              orders_amount: 100,
+              total_fees: 0.95,
+              merchant_paid_amount: 99.05
+            )
+
+            expect(order.reload.disbursement_id).to eq(new_disbursement.id)
+          end
         end
       end
     end
