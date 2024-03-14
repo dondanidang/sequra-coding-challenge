@@ -7,32 +7,41 @@ module Merchants
     DAYS_NUMBER_BY_FREQUENCY = {
       'WEEKLY' => 7,
      'DAILY' => 1
-    }
+  }.freeze
 
-    private_constant DAYS_NUMBER_BY_FREQUENCY
-
-    def initialize(merchant, only_last_disbursement: false)
+    # Initializes a new Merchants::GenerateDisbursementsService.
+    #
+    # merchant - The Merchant with Disbursement being generated.
+    # only_last_disbursement: Boolean indicating if we should exclusively on generating the dirsbursement based on the
+    #   current date.
+    #
+    def initialize(merchant, only_last_disbursement: true)
       @merchant = merchant
       @only_last_disbursement = only_last_disbursement
     end
 
+    # Generates Merchant's disbursement.
+    #
+    # Return True when success.
     def call
-      calculate_orders_fees
-
       current_date = start_date + frequency_in_days
 
+      calculate_orders_fees if current_date <= end_date
+
       while current_date.between?(start_date, end_date)
-        calculate_dibursement(current_date)
+        generate_dibursement(current_date)
 
         current_date += frequency_in_days
       end
+
+      true
     end
 
     def generate_dibursement(date)
       ActiveRecord::Base.transaction do
         win_start = (date - frequency_in_days).beginning_of_day
         win_end = (date - 1).end_of_day
-        orders = merchant.orders.where(created_at: win_start..win_end)
+        orders = @merchant.orders.where(created_at: win_start..win_end)
 
         disbursement = create_disbursement(orders)
 
@@ -57,7 +66,7 @@ module Merchants
     end
 
     def calculate_orders_fees
-      CalculateOrderFeesService.call(
+      CalculateOrdersFeesService.call(
         @merchant,
         start_date: start_date.beginning_of_day,
         end_date: end_date.end_of_day
@@ -67,6 +76,8 @@ module Merchants
     def start_date
       @start_date ||= if @only_last_disbursement
         delta = Date.current - @merchant.live_on
+
+        return @merchant.live_on if delta < frequency_in_days
 
         Date.current - (delta % frequency_in_days) - frequency_in_days
       elsif last_disbursement.nil?

@@ -4,6 +4,13 @@ module Merchants
   class CalculateOrdersFeesService < ApplicationService
     private
 
+    # Initializes a new Merchants::CalculateOrdersFeesService.
+    #
+    # merchant - The Merchant with Orders'fees being calculated.
+    # start_date - The Date representing the beginning the time window to consider.
+    # end_date - The Date representing the end of the time window to consider.
+    #   In the current implentation we are assume that both are given or we don't consider any if one is missing.
+    #
     def initialize(merchant, start_date: nil, end_date: nil)
       @merchant = merchant
 
@@ -11,6 +18,9 @@ module Merchants
       @end_date = end_date
     end
 
+    # Computes fees for the Merchant'orders.
+    #
+    # Return True when succes.
     def call
       orders.find_in_batches do |batch|
         upsertable_batch = batch.map do |item|
@@ -20,6 +30,8 @@ module Merchants
         end
 
         Order.upsert_all(upsertable_batch, update_only: %i[fees])
+
+        true
       end
     end
 
