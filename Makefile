@@ -8,3 +8,6 @@ db-up:
 
 rspec:
 	RAILS_ENV=test rails db:test:prepare  && rspec $(ARGS)
+
+sidekiq:
+	bundle exec sidekiq -C "config/sidekiq.yml"

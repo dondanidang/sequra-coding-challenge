@@ -4,5 +4,22 @@ services:
   db:
     image: postgres:14.1-alpine
     ports:
-      - '5432:5432'
+      - 5432:5432
     env_file: .env
+
+  redis:
+    image: redis:7.0.4-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf
+
+  sidekiq-web:
+    build: sidekiq/web/
+    volumes:
+      - ./sidekiq/web:/sidekiq
+    env_file: .env
+    ports:
+      - 4567:4567
+    depends_on:
+      - redis
