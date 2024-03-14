@@ -68,3 +68,7 @@ group :development do
 end
 
 gem "sidekiq-cron", "~> 1.12"
+
+gem "oj", "~> 3.16"
+
+gem "money", "~> 6.19"
