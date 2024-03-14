@@ -39,7 +39,7 @@ gem "bootsnap", require: false
 # gem "rack-cors"
 
 gem "sidekiq", "~> 7.2"
-
+gem 'oj'
 
 group :development, :test do
   gem 'rspec-rails', '~> 6.1.0'
@@ -66,9 +66,3 @@ group :development do
 
   gem 'error_highlight', '>= 0.4.0', platforms: [:ruby]
 end
-
-gem "sidekiq-cron", "~> 1.12"
-
-gem "oj", "~> 3.16"
-
-gem "money", "~> 6.19"
