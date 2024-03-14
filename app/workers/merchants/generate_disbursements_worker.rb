@@ -9,7 +9,10 @@ module Merchants
 
       merchant = Merchant.find(params[:merchant_id])
 
-      GenerateDisbursementsService.call(merchant, only_last_disbursement: params[:only_last_disbursement])
+      Merchants::GenerateDisbursementsService.call(
+        merchant,
+        only_last_disbursement: params[:only_last_disbursement]
+      )
     end
   end
 end
