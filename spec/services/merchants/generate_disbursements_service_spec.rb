@@ -67,14 +67,15 @@ RSpec.describe Merchants::GenerateDisbursementsService do
     end
 
     context 'when only_last_disbursement is false and there is another merchant order' do
-      let(:only_last_disbursement) { true }
+      let(:only_last_disbursement) { false }
+      let(:live_on) { 3.days.ago.to_date }
 
       let!(:order_2) do
         create(
           :order,
           merchant: merchant,
           amount: 10,
-          created_at: live_on + 1
+          created_at: 2.days.ago.to_date
         )
       end
 
@@ -86,7 +87,7 @@ RSpec.describe Merchants::GenerateDisbursementsService do
           .and change { order_2.reload.fees }.to(0.1)
           .and change { order_2.reload.disbursement_id }
 
-        first_disbursement = Disbursement.order(created_at: :desc).first
+        first_disbursement = Disbursement.order(created_at: :asc).first
         last_disbursement = Disbursement.order(created_at: :asc).last
 
         aggregate_failures do
@@ -103,7 +104,7 @@ RSpec.describe Merchants::GenerateDisbursementsService do
             merchant_id: merchant.id,
             orders_amount: 10,
             total_fees: 0.1,
-            merchant_paid_amount: 99.99
+            merchant_paid_amount: 9.9
           )
 
           expect(order_2.reload.disbursement_id).to eq(first_disbursement.id)

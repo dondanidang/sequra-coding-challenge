@@ -7,7 +7,7 @@ module Merchants
     DAYS_NUMBER_BY_FREQUENCY = {
       'WEEKLY' => 7,
      'DAILY' => 1
-  }.freeze
+    }.freeze
 
     # Initializes a new Merchants::GenerateDisbursementsService.
     #
@@ -38,11 +38,13 @@ module Merchants
     end
 
     def generate_dibursement(date)
-      ActiveRecord::Base.transaction do
-        win_start = (date - frequency_in_days).beginning_of_day
-        win_end = (date - 1).end_of_day
-        orders = @merchant.orders.where(created_at: win_start..win_end)
+      win_start = (date - frequency_in_days).beginning_of_day
+      win_end = (date - 1).end_of_day
+      orders = @merchant.orders.where(created_at: win_start..win_end)
 
+      return if orders.empty?
+
+      ActiveRecord::Base.transaction do
         disbursement = create_disbursement(orders)
 
         update_orders(orders, disbursement)
@@ -69,7 +71,7 @@ module Merchants
       CalculateOrdersFeesService.call(
         @merchant,
         start_date: start_date.beginning_of_day,
-        end_date: end_date.end_of_day
+        end_date: (end_date - 1).end_of_day
       )
     end
 
@@ -88,7 +90,11 @@ module Merchants
     end
 
     def end_date
-      Date.current
+      end_date ||= begin
+        delta = Date.current - @merchant.live_on
+
+        Date.current - (delta % frequency_in_days)
+      end
     end
 
     def frequency_in_days
