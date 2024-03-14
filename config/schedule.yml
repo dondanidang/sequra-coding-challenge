@@ -1,6 +1,6 @@
 #=========================== BACKOFFICE =========================================
 generate_disbursements_worker:
-  cron: "0 3 * * * Africa/Lagos"
+  cron: "0 3 * * *"
   class: "Crons::GenerateMerchantsDisbursementsWorker"
   args:
     schedule_indication: "Every day at 3 am, generate disbursements for all merchant"
