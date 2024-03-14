@@ -1,4 +1,3 @@
-#=========================== BACKOFFICE =========================================
 generate_disbursements_worker:
   cron: "0 3 * * *"
   class: "Crons::GenerateMerchantsDisbursementsWorker"
