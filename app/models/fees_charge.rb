@@ -8,5 +8,5 @@ class FeesCharge < ApplicationRecord
   belongs_to :merchant, inverse_of: :fees_charges
 
   validates :date, :collected_fees, :outstanding_fees, presence: true
-  validates :merchant_id, uniqueness: {scope: :ddate}
+  validates :date, uniqueness: {scope: :merchant_id, case_sensitive: false}
 end
