@@ -6,7 +6,7 @@ module Merchants
 
     # Initializes a new Merchants::CalculateFeesChargesService.
     #
-    # merchant - The Merchant with Orders'fees being calculated.
+    # merchant - The Merchant with fees charges being calculated.
     # start_date - The Date representing the beginning the time window to consider.
     # end_date - The Date representing the end of the time window to consider.
     #   In the current implentation we are assume that both are given or we don't consider any if one is missing.
@@ -18,7 +18,7 @@ module Merchants
       @end_date = end_date
     end
 
-    # Computes fees for the Merchant'orders.
+    # calculate the Merchant's fees charges.
     #
     # Return True when succes.
     def call
@@ -34,10 +34,12 @@ module Merchants
       end
 
       FeesCharge.insert_all(@insertable_fees_charge)
+
+      true
     end
 
     def generate_fees_charge(win_start, win_end)
-      collected_fees = dirsbursements
+      collected_fees = merchant.disbursements
         .where(created_at: win_start..win_end)
         .sum(:total_fees)
 
@@ -52,7 +54,7 @@ module Merchants
     end
 
     def start_date
-      @start_date ||= Dirsbursement
+      @start_date ||= Disbursement
         .where(merchant: merchant)
         .order(created_at: :asc)
         .first
@@ -61,16 +63,12 @@ module Merchants
     end
 
     def end_date
-      @end_date ||= Dirsbursement
+      @end_date ||= Disbursement
         .where(merchant: merchant)
         .order(created_at: :asc)
         .last
         .created_at
         .end_of_month
-    end
-
-    def dirsbursements
-      merchant.disbursements.where(created_at: start_date..end_date)
     end
   end
 end

@@ -12,7 +12,7 @@ module Merchants
     # Initializes a new Merchants::GenerateDisbursementsService.
     #
     # merchant - The Merchant with Disbursement being generated.
-    # only_last_disbursement: Boolean indicating if we should exclusively on generating the dirsbursement based on the
+    # only_last_disbursement: Boolean indicating if we should exclusively on generating the disbursement based on the
     #   current date.
     #
     def initialize(merchant, only_last_disbursement: true)
