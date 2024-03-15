@@ -7,6 +7,7 @@ RSpec.describe Merchant, type: :model do
 
   it { is_expected.to have_many(:orders) }
   it { is_expected.to have_many(:disbursements) }
+  it { is_expected.to have_many(:fees_charges) }
 
   it { is_expected.to validate_presence_of(:reference) }
   it { is_expected.to validate_presence_of(:disbursement_frequency) }

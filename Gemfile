@@ -41,6 +41,7 @@ gem "bootsnap", require: false
 gem "sidekiq", "~> 7.2"
 gem 'oj'
 gem 'money'
+gem "timecop", "~> 0.9.8"
 
 group :development, :test do
   gem 'rspec-rails', '~> 6.1.0'
