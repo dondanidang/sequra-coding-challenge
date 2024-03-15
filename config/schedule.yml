@@ -4,8 +4,8 @@ generate_disbursements_worker:
   args:
     schedule_indication: "Every day at 3 am, generate disbursements for all merchant"
 
-compute_merchants_monthly_fees_worker:
+generate_merchant_fees_charges_worker:
   cron: "0 0 1 * *"
-  class: "Crons::ComputeMerchantsMonthlyFeesWorker"
+  class: "Crons::GenerateMerchantsFeesChargesWorker"
   args:
-    schedule_indication: "Every first day of the month at 0 am, merchants monthly fees"
+    schedule_indication: "Every first day of the month at 0 am, generate merchants fees charges"

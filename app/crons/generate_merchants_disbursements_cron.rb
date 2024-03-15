@@ -3,6 +3,9 @@
 class GenerateMerchantsDisbursementsCron < ApplicationCron
   private
 
+  # Generates all disbursements for all merchants
+  #
+  # Return True.
   def run
     Merchant.find_each do |merchant|
       Merchants::GenerateDisbursementsWorker.perform_async({
@@ -10,5 +13,7 @@ class GenerateMerchantsDisbursementsCron < ApplicationCron
         only_last_disbursement: false
       }.to_json)
     end
+
+    true
   end
 end

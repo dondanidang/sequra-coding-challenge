@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Crons
-  class ComputeMerchantsMonthlyFeesWorker < ApplicationWorker
+  class GenerateMerchantsFeesChargesWorker < ApplicationWorker
     sidekiq_options queue: :default
 
     def perform(_params)
-      ComputeMerchantsMonthlyFeesCron.run
+      GenerateMerchantsFeesChargesCron.run
     end
   end
 end
