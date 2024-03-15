@@ -8,11 +8,11 @@ class GenerateMerchantsFeesChargesCron < ApplicationCron
   # Return True if success
   def run
     Merchant.find_each do |merchant|
-      Merchants::CalculateFeesChargesService.call({
+      Merchants::CalculateFeesChargesService.call(
         merchant: merchant,
         start_date: 1.month.ago.beginning_of_month,
         end_date: 1.month.ago.end_of_month
-      })
+      )
     end
 
     true
