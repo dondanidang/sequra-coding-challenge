@@ -14,8 +14,17 @@ module Merchants
     def initialize(merchant, start_date: nil, end_date: nil)
       @merchant = merchant
 
-      @start_date = start_date
-      @end_date = end_date
+      @start_date = if start_date.nil? || end_date.nil?
+                      nil
+                    else
+                      start_date
+                    end
+
+      @end_date = if start_date.nil? || end_date.nil?
+                    nil
+                  else
+                    end_date
+                  end
     end
 
     # calculate the Merchant's fees charges.
@@ -33,29 +42,29 @@ module Merchants
         current_date = current_date + 1.month
       end
 
-      FeesCharge.insert_all(@insertable_fees_charge)
+      FeesCharge.insert_all(insertable_fees_charges)
 
       true
     end
 
     def generate_fees_charge(win_start, win_end)
-      collected_fees = merchant.disbursements
+      collected_fees = @merchant.disbursements
         .where(created_at: win_start..win_end)
         .sum(:total_fees)
 
-      outstanding_fees = [0, merchant.minimum_monthly_fee - collected_fees].max
+      outstanding_fees = [0, @merchant.minimum_monthly_fee - collected_fees].max
 
       {
         collected_fees: collected_fees,
         outstanding_fees: outstanding_fees,
-        merchant_id: merchant.id,
-        date: Date.current
+        merchant_id: @merchant.id,
+        date: win_end + 1
       }
     end
 
     def start_date
       @start_date ||= Disbursement
-        .where(merchant: merchant)
+        .where(merchant: @merchant)
         .order(created_at: :asc)
         .first
         .created_at
@@ -64,7 +73,7 @@ module Merchants
 
     def end_date
       @end_date ||= Disbursement
-        .where(merchant: merchant)
+        .where(merchant: @merchant)
         .order(created_at: :asc)
         .last
         .created_at
