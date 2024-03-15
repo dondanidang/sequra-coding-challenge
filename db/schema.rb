@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_13_003303) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_15_172742) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -25,6 +25,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_003303) do
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["merchant_id"], name: "index_disbursements_on_merchant_id"
     t.index ["reference"], name: "index_disbursements_on_reference", unique: true
+  end
+
+  create_table "merchant_fees_reports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "merchant_id", null: false
+    t.decimal "collected_fees", precision: 16, scale: 2, null: false
+    t.decimal "outstanding_fees", precision: 16, scale: 2, null: false
+    t.date "date", null: false
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["merchant_id", "date"], name: "index_merchant_fees_reports_on_merchant_id_and_date", unique: true
+    t.index ["merchant_id"], name: "index_merchant_fees_reports_on_merchant_id"
   end
 
   create_table "merchants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -53,6 +64,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_003303) do
   end
 
   add_foreign_key "disbursements", "merchants"
+  add_foreign_key "merchant_fees_reports", "merchants"
   add_foreign_key "orders", "disbursements"
   add_foreign_key "orders", "merchants"
 end

@@ -12,6 +12,7 @@ class Merchant < ApplicationRecord
 
   has_many :orders, inverse_of: :merchant
   has_many :disbursements, inverse_of: :merchant
+  has_many :merchant_fees_reports, inverse_of: :merchant
 
   validates :reference, uniqueness: true
   validates :email, uniqueness: true
