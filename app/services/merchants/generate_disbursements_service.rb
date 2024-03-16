@@ -45,7 +45,7 @@ module Merchants
       return if orders.empty?
 
       ActiveRecord::Base.transaction do
-        disbursement = create_disbursement(orders)
+        disbursement = create_disbursement(orders, date)
 
         update_orders(orders, disbursement)
       end
@@ -63,7 +63,8 @@ module Merchants
         merchant: @merchant,
         orders_amount: orders_amount,
         merchant_paid_amount: orders_amount - total_fees,
-        total_fees: total_fees
+        total_fees: total_fees,
+        date: date
       )
     end
 
@@ -85,7 +86,7 @@ module Merchants
       elsif last_disbursement.nil?
         @merchant.live_on
       else
-        last_disbursement.created_at.to_date
+        last_disbursement.date
       end
     end
 
