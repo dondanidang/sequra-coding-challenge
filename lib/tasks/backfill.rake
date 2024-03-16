@@ -12,9 +12,9 @@ end
 
 desc 'Generate all fees charges for all merchants'
 task year_to_year_report: [:environment] do
-  disbursements_volume_by_year =  Disbursement.group("DATE_PART('Year', created_at)").count(:id)
-  disbursements_value_by_year =  Disbursement.group("DATE_PART('Year', created_at)").sum(:merchant_paid_amount)
-  orders_amount_by_year = Disbursement.group("DATE_PART('Year', created_at)").sum(:orders_amount)
+  disbursements_volume_by_year =  Disbursement.group("DATE_PART('Year', date)").count(:id)
+  disbursements_value_by_year =  Disbursement.group("DATE_PART('Year', date)").sum(:merchant_paid_amount)
+  orders_amount_by_year = Disbursement.group("DATE_PART('Year', date)").sum(:orders_amount)
   fees_charges_volume_by_year =  FeesCharge.group("DATE_PART('Year', date)").count(:id)
   fees_charges_value_by_year =  FeesCharge.group("DATE_PART('Year', date)").sum(:outstanding_fees)
 
