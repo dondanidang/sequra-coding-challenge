@@ -10,7 +10,7 @@ class Disbursement < ApplicationRecord
   belongs_to :merchant, inverse_of: :disbursements
   has_many :orders, inverse_of: :disbursement
 
-  validates :reference, :orders_amount, :merchant_paid_amount, :total_fees, presence: true
+  validates :reference, :orders_amount, :merchant_paid_amount, :total_fees, :date, presence: true
   validates :reference, uniqueness: true
 
   private def set_defaults

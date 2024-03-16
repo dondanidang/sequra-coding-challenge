@@ -49,7 +49,7 @@ module Merchants
 
     def generate_fees_charge(win_start, win_end)
       collected_fees = @merchant.disbursements
-        .where(created_at: win_start..win_end)
+        .where(date: win_start..win_end)
         .sum(:total_fees)
 
       outstanding_fees = [0, @merchant.minimum_monthly_fee - collected_fees].max
@@ -65,18 +65,18 @@ module Merchants
     def start_date
       @start_date ||= Disbursement
         .where(merchant: @merchant)
-        .order(created_at: :asc)
+        .order(date: :asc)
         .first
-        .created_at
+        .date
         .beginning_of_month
     end
 
     def end_date
       @end_date ||= Disbursement
         .where(merchant: @merchant)
-        .order(created_at: :asc)
+        .order(date: :asc)
         .last
-        .created_at
+        .date
         .end_of_month
     end
   end

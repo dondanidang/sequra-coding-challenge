@@ -9,6 +9,7 @@ RSpec.describe Disbursement, type: :model do
   it { is_expected.to validate_presence_of(:orders_amount) }
   it { is_expected.to validate_presence_of(:merchant_paid_amount) }
   it { is_expected.to validate_presence_of(:total_fees) }
+  it { is_expected.to validate_presence_of(:date) }
 
   it { is_expected.to validate_uniqueness_of(:reference) }
 
