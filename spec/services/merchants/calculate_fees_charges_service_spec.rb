@@ -19,7 +19,7 @@ RSpec.describe Merchants::CalculateFeesChargesService do
         :disbursement,
         merchant: merchant,
         total_fees: 4,
-        created_at: "2024-04-05".to_date
+        date: "2024-04-05".to_date
       )
     end
 
@@ -54,16 +54,16 @@ RSpec.describe Merchants::CalculateFeesChargesService do
           :disbursement,
           merchant: merchant,
           total_fees: 9,
-          created_at: "2024-02-05".to_date
+          date: "2024-02-05".to_date
         )
       end
 
       it 'calculates all fees_charges' do
         expect { calculate }.to change { FeesCharge.count }.by(3)
 
-        first_fees_charge = FeesCharge.order(created_at: :asc).first
-        second_fees_charge = FeesCharge.order(created_at: :asc).second
-        last_fees_charge = FeesCharge.order(created_at: :asc).third
+        first_fees_charge = FeesCharge.order(date: :asc).first
+        second_fees_charge = FeesCharge.order(date: :asc).second
+        last_fees_charge = FeesCharge.order(date: :asc).third
 
         aggregate_failures do
           expect(last_fees_charge).to have_attributes(

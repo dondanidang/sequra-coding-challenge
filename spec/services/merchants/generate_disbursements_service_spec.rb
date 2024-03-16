@@ -92,8 +92,8 @@ RSpec.describe Merchants::GenerateDisbursementsService do
           .and change { order_2.reload.fees }.to(0.1)
           .and change { order_2.reload.disbursement_id }
 
-        first_disbursement = Disbursement.order(created_at: :asc).first
-        last_disbursement = Disbursement.order(created_at: :asc).last
+        first_disbursement = Disbursement.order(date: :asc).first
+        last_disbursement = Disbursement.order(date: :asc).last
 
         aggregate_failures do
           expect(last_disbursement).to have_attributes(
@@ -125,7 +125,7 @@ RSpec.describe Merchants::GenerateDisbursementsService do
             orders_amount: 10,
             total_fees: 0.1,
             merchant_paid_amount: 9.9,
-            created_at: 1.day.ago.to_date
+            date: 1.day.ago.to_date
           )
         end
 
@@ -137,7 +137,7 @@ RSpec.describe Merchants::GenerateDisbursementsService do
           .and not_change { order_2.reload.fees }
           .and not_change { order_2.reload.disbursement_id }
 
-          new_disbursement = Disbursement.order(created_at: :asc).last
+          new_disbursement = Disbursement.order(date: :asc).last
 
           aggregate_failures do
             expect(new_disbursement).to have_attributes(

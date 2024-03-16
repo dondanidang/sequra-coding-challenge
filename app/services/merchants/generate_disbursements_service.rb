@@ -55,7 +55,7 @@ module Merchants
       orders.update_all(disbursement_id: disbursement.id)
     end
 
-    def create_disbursement(orders)
+    def create_disbursement(orders, date)
       orders_amount = orders.sum(:amount)
       total_fees = orders.sum(:fees)
 
